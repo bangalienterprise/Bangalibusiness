@@ -1,0 +1,17 @@
+{
+    "configurations": [
+        {
+            "name": "Dart: Run all Tests",
+            "type": "dart",
+            "request": "launch",
+            "program": "./test/"
+        },
+        {
+            "name": "Containers: Node.js Launch",
+            "type": "docker",
+            "request": "launch",
+            "preLaunchTask": "docker-run: debug",
+            "platform": "node"
+        }
+    ]
+}

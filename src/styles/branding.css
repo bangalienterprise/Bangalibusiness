@@ -1,0 +1,44 @@
+:root {
+  /* Brand Colors */
+  --be-navy: #0f172a;       /* Main background */
+  --be-navy-light: #1e293b; /* Card background */
+  --be-blue: #3b82f6;       /* Primary Action */
+  --be-blue-hover: #2563eb;
+  --be-green: #10b981;      /* Brand Green */
+  --be-red: #ef4444;        /* Brand Red */
+  
+  /* Text Colors */
+  --be-text-white: #ffffff;
+  --be-text-gray: #94a3b8;  /* slate-400 */
+  --be-text-muted: #64748b; /* slate-500 */
+  
+  /* Gradients */
+  --be-gradient-primary: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  --be-gradient-logo: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.be-bg-navy { background-color: var(--be-navy); }
+.be-bg-card { background-color: var(--be-navy-light); }
+.be-text-blue { color: var(--be-blue); }
+
+.be-input {
+  background-color: #0f172a !important; 
+  border-color: #334155 !important;
+  color: white !important;
+}
+
+.be-input:focus {
+  border-color: var(--be-blue) !important;
+  ring: 2px var(--be-blue) !important;
+}
+
+.be-btn-primary {
+  background: var(--be-gradient-primary);
+  color: white;
+  transition: all 0.3s ease;
+}
+
+.be-btn-primary:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <linearGradient id="greenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#16a34a;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#15803d;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="redGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#dc2626;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#b91c1c;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <!-- Stylized B -->
+  <path d="M40,20 L40,180 L90,180 C130,180 150,160 150,130 C150,110 135,95 110,95 C130,95 145,80 145,60 C145,35 125,20 90,20 Z M65,45 L90,45 C110,45 120,50 120,65 C120,80 110,85 90,85 L65,85 Z M65,110 L90,110 C115,110 125,115 125,135 C125,155 115,160 90,160 L65,160 Z" fill="url(#greenGrad)" />
+  <!-- Stylized e overlaying bottom right -->
+  <path d="M120,100 C100,100 85,115 85,140 C85,165 100,180 125,180 C145,180 155,170 160,160 L150,145 C145,150 135,160 125,160 C110,160 105,150 105,140 L165,140 C165,115 150,100 120,100 Z M105,125 C105,115 110,115 120,115 C130,115 135,120 135,125 Z" fill="url(#redGrad)" transform="translate(30, 0)" />
+</svg>

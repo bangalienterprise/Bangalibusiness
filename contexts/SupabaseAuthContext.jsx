@@ -1,0 +1,2 @@
+
+// This file is deprecated. Please use src/contexts/SupabaseAuthContext.jsx instead.
