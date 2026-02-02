@@ -31,8 +31,8 @@ Bangali Enterprise is a comprehensive, multi-tenant business management platform
 
 1.  **Clone the repository:**
     ```bash
-    git clone https://github.com/bangalienterprise/Bangali-Web-Application.git
-    cd Bangali-Web-Application
+    git clone https://github.com/bangalienterprise/Bangalibusiness.git
+    cd Bangalibusiness
     ```
 
 2.  **Install dependencies:**
