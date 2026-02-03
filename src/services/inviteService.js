@@ -49,13 +49,13 @@ export const inviteService = {
 
       if (error || !data) throw new Error('Invalid or expired invite code');
 
-      return { 
-        valid: true, 
-        business: data.businesses, 
+      return {
+        valid: true,
+        business: data.businesses,
         role: data.role,
         inviteId: data.id,
         businessId: data.business_id,
-        error: null 
+        error: null
       };
     } catch (error) {
       return { valid: false, error: error.message };
@@ -71,9 +71,9 @@ export const inviteService = {
       const { valid, inviteId, businessId, role, error: valError } = await this.validateInviteCode(code);
       if (!valid) throw new Error(valError);
 
-      // 2. Create business_user link
+      // 2. Create organization_members link
       const { error: linkError } = await supabase
-        .from('business_users')
+        .from('organization_members')
         .insert({
           business_id: businessId,
           user_id: userId,
@@ -85,7 +85,7 @@ export const inviteService = {
       // 3. Mark invite as accepted
       const { error: updateError } = await supabase
         .from('invites')
-        .update({ 
+        .update({
           status: 'accepted',
           accepted_by: userId,
           updated_at: new Date().toISOString()
@@ -97,7 +97,7 @@ export const inviteService = {
       // 4. Update profile with default business
       await supabase
         .from('profiles')
-        .update({ 
+        .update({
           business_id: businessId,
           role: role
         })
@@ -106,6 +106,24 @@ export const inviteService = {
       return { success: true, businessId, error: null };
     } catch (error) {
       return { success: false, error };
+    }
+  },
+
+  /**
+   * Revokes an invite code
+   */
+  async revokeInviteCode(code) {
+    try {
+      const { error } = await supabase
+        .from('invites')
+        .update({ status: 'revoked' })
+        .eq('code', code);
+
+      if (error) throw error;
+      return { success: true };
+    } catch (error) {
+      console.error('Revoke failed:', error);
+      return { error };
     }
   }
 };

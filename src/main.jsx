@@ -8,11 +8,11 @@ import { AuthProvider as SupabaseAuthProvider } from '@/contexts/SupabaseAuthCon
 // Clean entry point with minimal providers
 ReactDOM.createRoot(document.getElementById('root')).render(
   <>
-    <BrowserRouter>
-      {/* Kept for compatibility if any child strictly requires this context, though it does nothing now */}
-      <SupabaseAuthProvider> 
-        <App />
-      </SupabaseAuthProvider>
-    </BrowserRouter>
+      <BrowserRouter>
+        {/* Kept for compatibility if any child strictly requires this context, though it does nothing now */}
+        <SupabaseAuthProvider> 
+          <App />
+        </SupabaseAuthProvider>
+      </BrowserRouter>
   </>
 );

@@ -1,6 +1,13 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
+
+  # 1. STOP REWRITING for /api/ and /api
+  # This tells Apache: if the URL starts with /api, stop processing rules here.
+  RewriteRule ^api($|/) - [L]
+
+  # 2. Standard React SPA fallback
+  # If the file/dir doesn't exist, serve index.html
   RewriteRule ^index\.html$ - [L]
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d

@@ -8,7 +8,7 @@ import {
   Settings, LogOut, ChevronLeft, ChevronRight, Store,
   Briefcase, Wrench, Wallet, HelpCircle, Bell,
   Building2, Database, Shield, Activity, Gift, Truck, AlertOctagon,
-  Layers, CreditCard, UserCircle
+  Layers, CreditCard, UserCircle, Utensils, ChefHat, BookOpen, Coffee
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -46,7 +46,6 @@ const Sidebar = ({ isCollapsed, toggleCollapse, isMobile, closeMobileMenu }) => 
   const businessName = currentBusiness?.name || 'BANGALI';
 
   // --- MENU CONFIGURATION ---
-  // --- MENU CONFIGURATION ---
   const retailNav = [
     { title: 'Dashboard', path: '/retail/dashboard', icon: LayoutDashboard },
     { title: 'New Sale (POS)', path: '/retail/pos', icon: ShoppingCart },
@@ -63,6 +62,16 @@ const Sidebar = ({ isCollapsed, toggleCollapse, isMobile, closeMobileMenu }) => 
     { title: 'Settings', path: '/retail/settings', icon: Settings, roles: ['owner'] },
   ];
 
+  const restaurantNav = [
+    { title: 'Floor Plan', path: '/restaurant/floor-plan', icon: LayoutDashboard }, 
+    { title: 'Kitchen View', path: '/restaurant/kitchen', icon: ChefHat },
+    { title: 'Menu Manager', path: '/restaurant/menu', icon: BookOpen },
+    { title: 'Orders', path: '/restaurant/orders', icon: Coffee },
+    { title: 'Team', path: '/restaurant/team', icon: Users, roles: ['owner', 'manager'] },
+    { title: 'Reports', path: '/restaurant/reports', icon: Activity },
+    { title: 'Settings', path: '/restaurant/settings', icon: Settings, roles: ['owner'] },
+  ];
+
   const agencyNav = [
     { title: 'Dashboard', path: '/agency/dashboard', icon: LayoutDashboard },
     { title: 'Projects', path: '/agency/projects', icon: Briefcase },
@@ -77,7 +86,7 @@ const Sidebar = ({ isCollapsed, toggleCollapse, isMobile, closeMobileMenu }) => 
   const serviceNav = [
     { title: 'Dashboard', path: '/service/dashboard', icon: LayoutDashboard },
     { title: 'Appointments', path: '/service/appointments', icon: FileText },
-    { title: 'Calendar', path: '/service/calendar', icon: LayoutDashboard }, // Calendar icon ideally
+    { title: 'Calendar', path: '/service/calendar', icon: LayoutDashboard }, 
     { title: 'Services', path: '/service/services', icon: Briefcase },
     { title: 'Customers', path: '/service/customers', icon: Users },
     { title: 'Team', path: '/service/team', icon: Users, roles: ['owner', 'manager'] },
@@ -122,15 +131,20 @@ const Sidebar = ({ isCollapsed, toggleCollapse, isMobile, closeMobileMenu }) => 
   if (role === 'global_admin') {
     navItems = [...adminNav, ...commonNav];
   } else {
-    // Determine which nav to use based on industry
-    const industry = currentBusiness?.industry?.toLowerCase();
+    // Determine which nav to use based on industry/type
+    const type = currentBusiness?.type_slug || currentBusiness?.type || 'retail';
+    const industry = type.toLowerCase();
 
     let industryNav = [];
     switch (industry) {
+      case 'restaurant':
+        industryNav = restaurantNav;
+        break;
       case 'agency':
         industryNav = agencyNav;
         break;
       case 'service':
+      case 'service_provider': 
         industryNav = serviceNav;
         break;
       case 'freelancer':
@@ -141,10 +155,10 @@ const Sidebar = ({ isCollapsed, toggleCollapse, isMobile, closeMobileMenu }) => 
         break;
       case 'wholesale':
       case 'manufacturing':
-        // Fallback to retail for now or empty until implemented
         industryNav = retailNav;
         break;
       case 'retail':
+      case 'retail_store':
       default:
         industryNav = retailNav;
         break;
@@ -157,21 +171,23 @@ const Sidebar = ({ isCollapsed, toggleCollapse, isMobile, closeMobileMenu }) => 
   return (
     <div
       className={cn(
-        "flex flex-col h-full bg-slate-950 border-r border-slate-800 transition-all duration-300 relative",
+        "flex flex-col h-full transition-all duration-300 relative border-r",
+        // Theme Styles
+        "bg-white dark:bg-slate-950 border-slate-200 dark:border-slate-800",
         isCollapsed ? "w-20" : "w-64",
         isMobile && "w-full"
       )}
     >
       {/* Sidebar Header */}
-      <div className="h-16 flex items-center px-4 border-b border-slate-800 bg-slate-950">
+      <div className="h-16 flex items-center px-4 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950">
         <div className="flex items-center gap-3 overflow-hidden w-full">
-          <div className="shrink-0 text-green-500">
+          <div className="shrink-0 text-green-600 dark:text-green-500">
             <BangaliLogo size="sm" logoUrl={logoUrl} />
           </div>
           <div className={cn("flex flex-col transition-opacity duration-200", isCollapsed && !isMobile ? "opacity-0 w-0" : "opacity-100")}>
             <div className="flex flex-col leading-none">
-              <span className="font-bold text-white text-sm tracking-wide truncate">{businessName}</span>
-              <span className="font-bold text-slate-500 text-[0.6rem] tracking-wider uppercase">{currentBusiness?.industry || 'Enterprise'}</span>
+              <span className="font-bold text-slate-900 dark:text-white text-sm tracking-wide truncate">{businessName}</span>
+              <span className="font-bold text-slate-500 text-[0.6rem] tracking-wider uppercase">{currentBusiness?.industry || currentBusiness?.type_slug || 'Enterprise'}</span>
             </div>
           </div>
         </div>
@@ -179,13 +195,13 @@ const Sidebar = ({ isCollapsed, toggleCollapse, isMobile, closeMobileMenu }) => 
 
       {/* User Profile Summary (Above Nav) */}
       {!isCollapsed && !isMobile && (
-        <div className="p-4 border-b border-slate-800">
+        <div className="p-4 border-b border-slate-200 dark:border-slate-800">
           <div className="flex items-center gap-3">
-            <div className="h-9 w-9 rounded-full bg-slate-800 flex items-center justify-center text-slate-400 font-bold border border-slate-700">
+            <div className="h-9 w-9 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-400 font-bold border border-slate-200 dark:border-slate-700">
               {profile?.full_name?.charAt(0) || 'U'}
             </div>
             <div className="flex flex-col overflow-hidden">
-              <span className="text-sm font-medium text-white truncate">{profile?.full_name}</span>
+              <span className="text-sm font-medium text-slate-900 dark:text-white truncate">{profile?.full_name}</span>
               <span className="text-xs text-slate-500 truncate capitalize">{role?.replace('_', ' ')}</span>
             </div>
           </div>
@@ -200,16 +216,16 @@ const Sidebar = ({ isCollapsed, toggleCollapse, isMobile, closeMobileMenu }) => 
               key={item.path}
               to={item.path}
               onClick={isMobile ? closeMobileMenu : undefined}
-              end={item.path === '/admin' || item.path === '/retail/dashboard' || item.path === '/agency/dashboard' || item.path === '/service/dashboard' || item.path === '/freelancer/dashboard'}
+              end={item.path === '/admin' || item.path === '/retail/dashboard' || item.path === '/agency/dashboard' || item.path === '/service/dashboard' || item.path === '/freelancer/dashboard' || item.path === '/restaurant/dashboard'}
               className={({ isActive }) => cn(
                 "flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors text-sm font-medium group relative",
                 isActive
-                  ? "bg-blue-600/10 text-blue-500"
-                  : "text-slate-400 hover:text-white hover:bg-slate-800",
+                  ? "bg-blue-50 dark:bg-blue-600/10 text-blue-600 dark:text-blue-500"
+                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800",
                 isCollapsed && !isMobile && "justify-center px-0"
               )}
             >
-              <item.icon className={cn("h-5 w-5 shrink-0 transition-colors", ({ isActive }) => isActive ? "text-blue-500" : "text-slate-500 group-hover:text-white")} />
+              <item.icon className={cn("h-5 w-5 shrink-0 transition-colors", ({ isActive }) => isActive ? "text-blue-600 dark:text-blue-500" : "text-slate-500 dark:text-slate-500 group-hover:text-slate-700 dark:group-hover:text-white")} />
               <span className={cn(isCollapsed && !isMobile ? "hidden" : "block")}>
                 {item.title}
               </span>
@@ -226,14 +242,14 @@ const Sidebar = ({ isCollapsed, toggleCollapse, isMobile, closeMobileMenu }) => 
       </ScrollArea>
 
       {/* Sidebar Footer */}
-      <div className="p-4 border-t border-slate-800 space-y-2 bg-slate-950">
+      <div className="p-4 border-t border-slate-200 dark:border-slate-800 space-y-2 bg-white dark:bg-slate-950">
         {/* User Dropdown for Settings/Logout */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button
               variant="ghost"
               className={cn(
-                "w-full justify-start text-slate-400 hover:text-white hover:bg-slate-800 px-2",
+                "w-full justify-start text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 px-2",
                 isCollapsed && "justify-center"
               )}
             >
@@ -241,13 +257,13 @@ const Sidebar = ({ isCollapsed, toggleCollapse, isMobile, closeMobileMenu }) => 
               <span className={cn("ml-3", isCollapsed ? "hidden" : "block")}>Account</span>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-56 bg-slate-900 border-slate-800 text-slate-200 mb-2" align="start" side="right">
+          <DropdownMenuContent className="w-56 bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 mb-2" align="start" side="right">
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
-            <DropdownMenuSeparator className="bg-slate-700" />
-            <DropdownMenuItem onClick={() => navigate('/retail/profile')} className="cursor-pointer hover:bg-slate-800 focus:bg-slate-800">
+            <DropdownMenuSeparator className="bg-slate-200 dark:bg-slate-700" />
+            <DropdownMenuItem onClick={() => navigate('/retail/profile')} className="cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 focus:bg-slate-100 dark:focus:bg-slate-800">
               <UserCircle className="mr-2 h-4 w-4" /> Profile
             </DropdownMenuItem>
-            <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-red-400 hover:text-red-300 hover:bg-red-950/20 focus:bg-red-950/20">
+            <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-950/20 focus:bg-red-50 dark:focus:bg-red-950/20">
               <LogOut className="mr-2 h-4 w-4" /> Sign out
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -258,7 +274,7 @@ const Sidebar = ({ isCollapsed, toggleCollapse, isMobile, closeMobileMenu }) => 
             variant="ghost"
             size="sm"
             onClick={toggleCollapse}
-            className="w-full text-slate-500 hover:text-white hover:bg-slate-800"
+            className="w-full text-slate-500 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800"
           >
             {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <div className="flex items-center gap-2"><ChevronLeft className="h-4 w-4" /> <span>Collapse</span></div>}
           </Button>

@@ -1,9 +1,9 @@
-
 import React, { useEffect } from 'react';
 import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from '@/contexts/AuthContext';
-import { BusinessProvider } from '@/contexts/BusinessContext';
+import { BusinessProvider, useBusiness } from '@/contexts/BusinessContext';
 import { RoleProvider } from '@/contexts/RoleContext';
+import { ThemeProvider, useTheme } from '@/contexts/ThemeContext';
 import SettingsProviderWrapper from '@/components/SettingsProviderWrapper';
 import { Toaster } from '@/components/ui/toaster';
 import DashboardLayout from '@/components/layouts/DashboardLayout';
@@ -14,6 +14,9 @@ import LoginPage from '@/pages/LoginPage';
 import SignupPage from '@/pages/SignupPage';
 import AccessDeniedPage from '@/pages/AccessDeniedPage';
 import NotFoundPage from '@/pages/NotFoundPage';
+import ForgotPasswordPage from '@/pages/ForgotPasswordPage';
+import JoinBusinessPage from '@/pages/JoinBusinessPage';
+import JoinExistingBusiness from '@/pages/JoinExistingBusiness';
 
 // Main Router
 import DashboardRouter from '@/pages/DashboardRouter';
@@ -71,6 +74,13 @@ import AttendancePage from '@/pages/education/AttendancePage';
 import CourseManager from '@/pages/education/CourseManagerPage';
 import FeeCollection from '@/pages/education/FeeCollectionPage';
 
+// Restaurant Pages
+import FloorPlanPage from '@/pages/restaurant/FloorPlanPage';
+import KitchenViewPage from '@/pages/restaurant/KitchenViewPage';
+import MenuManagerPage from '@/pages/restaurant/MenuManagerPage';
+import RestaurantOrdersPage from '@/pages/restaurant/RestaurantOrdersPage';
+
+
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
   if (loading) return <div className="h-screen flex items-center justify-center bg-slate-950 text-white"><Loader2 className="h-8 w-8 animate-spin" /></div>;
@@ -79,26 +89,59 @@ const ProtectedRoute = ({ children }) => {
 };
 
 const AppContent = () => {
-  const { user, loading, role } = useAuth();
+  const { user, loading: authLoading, role } = useAuth();
+  const { currentBusiness, loading: businessLoading } = useBusiness();
+  const { setTheme } = useTheme();
   const navigate = useNavigate();
+  const loading = authLoading || businessLoading;
 
   useEffect(() => {
     if (!loading && user) {
-      // Smart redirection based on role if at root
+      // Force Theme based on role
+      if (role === 'global_admin') {
+        setTheme('dark');
+      } else {
+        setTheme('light');
+      }
+
+      // Smart redirection based on role/business type if at root
       if (window.location.pathname === '/' || window.location.pathname === '/login') {
         if (role === 'global_admin') {
           navigate('/admin');
-        } else {
-          navigate('/retail/dashboard');
+        } else if (currentBusiness) {
+            const type = currentBusiness.type_slug || currentBusiness.type || 'retail';
+            switch(type) {
+                case 'restaurant':
+                    navigate('/restaurant/dashboard');
+                    break;
+                case 'agency':
+                    navigate('/agency/dashboard');
+                    break;
+                case 'service':
+                    navigate('/service/dashboard');
+                    break;
+                case 'freelancer':
+                    navigate('/freelancer/dashboard');
+                    break;
+                case 'education':
+                    navigate('/education/students');
+                    break;
+                default:
+                    navigate('/retail/dashboard');
+            }
         }
       }
     }
-  }, [user, loading, role, navigate]);
+  }, [user, loading, role, currentBusiness, navigate, setTheme]);
 
   return (
     <Routes>
+      {/* Auth Routes */}
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/admin/login" element={<LoginPage isAdmin={true} />} />
       <Route path="/signup" element={<SignupPage />} />
+      <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+      <Route path="/join-business" element={<JoinExistingBusiness />} /> {/* Updated to point to correct page */}
       <Route path="/access-denied" element={<AccessDeniedPage />} />
 
       {/* Admin Routes */}
@@ -128,6 +171,18 @@ const AppContent = () => {
         <Route path="/retail/due-collection" element={<DueCollectionPage />} />
         <Route path="/retail/reports" element={<Reports />} />
         <Route path="/retail/profile" element={<UserProfile />} />
+      </Route>
+
+       {/* Restaurant Routes */}
+       <Route element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
+        <Route path="/restaurant/dashboard" element={<FloorPlanPage />} /> {/* Defaulting to Floor Plan for now */}
+        <Route path="/restaurant/floor-plan" element={<FloorPlanPage />} />
+        <Route path="/restaurant/kitchen" element={<KitchenViewPage />} />
+        <Route path="/restaurant/menu" element={<MenuManagerPage />} />
+        <Route path="/restaurant/orders" element={<RestaurantOrdersPage />} />
+        <Route path="/restaurant/team" element={<TeamPage />} />
+        <Route path="/restaurant/reports" element={<Reports />} />
+        <Route path="/restaurant/settings" element={<SettingsPage />} />
       </Route>
 
       {/* Agency Routes */}
@@ -190,12 +245,14 @@ function App() {
   return (
     <AuthProvider>
       <BusinessProvider>
-        <RoleProvider>
-          <SettingsProviderWrapper>
-            <AppContent />
-            <Toaster />
-          </SettingsProviderWrapper>
-        </RoleProvider>
+        <ThemeProvider>
+          <RoleProvider>
+            <SettingsProviderWrapper>
+              <AppContent />
+              <Toaster />
+            </SettingsProviderWrapper>
+          </RoleProvider>
+        </ThemeProvider>
       </BusinessProvider>
     </AuthProvider>
   );

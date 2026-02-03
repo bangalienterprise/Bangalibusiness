@@ -2,6 +2,7 @@
 
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
 const CLEAN_CONTENT_REGEX = {
   comments: /\/\*[\s\S]*?\*\/|\/\/.*$/gm,
@@ -82,7 +83,18 @@ function extractRoutes(appJsxPath) {
 }
 
 function findReactFiles(dir) {
-  return fs.readdirSync(dir).map(item => path.join(dir, item));
+  let results = [];
+  const list = fs.readdirSync(dir);
+  list.forEach(file => {
+    file = path.join(dir, file);
+    const stat = fs.statSync(file);
+    if (stat && stat.isDirectory()) {
+      results = results.concat(findReactFiles(file));
+    } else if (file.endsWith('.jsx') || file.endsWith('.js')) {
+      results.push(file);
+    }
+  });
+  return results;
 }
 
 function extractHelmetData(content, filePath, routes) {
@@ -173,9 +185,12 @@ function main() {
   
   ensureDirectoryExists(path.dirname(outputPath));
   fs.writeFileSync(outputPath, llmsTxtContent, 'utf8');
+  console.log('✅ Generated public/llms.txt');
 }
 
-const isMainModule = import.meta.url === `file://${process.argv[1]}`;
+// Fix for Windows paths and different ESM loaders
+const currentFilePath = fileURLToPath(import.meta.url);
+const isMainModule = currentFilePath === path.resolve(process.argv[1]);
 
 if (isMainModule) {
   main();

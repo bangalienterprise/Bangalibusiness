@@ -37,7 +37,7 @@ export function AuthProvider({ children }) {
   const checkUser = async () => {
     try {
       const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-      
+
       if (sessionError || !session) {
         setUser(null);
         setProfile(null);
@@ -47,20 +47,20 @@ export function AuthProvider({ children }) {
       }
 
       const { user, profile, business, error } = await authService.getCurrentUser();
-      
+
       if (error) {
         console.error("Auth check error:", error);
         if (error.message && (error.message.includes('jwt') || error.message.includes('sub claim'))) {
-            await authService.logoutUser();
-            return;
+          await authService.logoutUser();
+          return;
         }
         if (user) setUser(user);
       }
-      
+
       if (user) setUser(user);
       if (profile) setProfile(profile);
       if (business) setBusiness(business);
-      
+
     } catch (error) {
       console.error("Auth check failed", error);
     } finally {
@@ -81,17 +81,17 @@ export function AuthProvider({ children }) {
   };
 
   const signup = async (email, password, fullName, businessType, businessName, accountType, inviteCode) => {
-      setLoading(true);
-      const result = await authService.signupUser({ 
-          email, password, fullName, businessType, businessName, accountType, inviteCode 
-      });
-      if (result.error) {
-          setLoading(false);
-          throw result.error;
-      }
-      await checkUser(); 
+    setLoading(true);
+    const result = await authService.signupUser({
+      email, password, fullName, businessType, businessName, accountType, inviteCode
+    });
+    if (result.error) {
       setLoading(false);
-      return result;
+      throw result.error;
+    }
+    await checkUser();
+    setLoading(false);
+    return result;
   };
 
   const logout = async () => {
@@ -104,53 +104,64 @@ export function AuthProvider({ children }) {
   };
 
   const updatePassword = async (newPassword) => {
-      const { error } = await supabase.auth.updateUser({ password: newPassword });
-      if (error) throw error;
-      return { success: true };
+    const { error } = await supabase.auth.updateUser({ password: newPassword });
+    if (error) throw error;
+    return { success: true };
+  };
+
+  const forgotPassword = async (email) => {
+    setLoading(true);
+    const result = await authService.resetPasswordForEmail(email);
+    setLoading(false);
+    return result;
   };
 
   const loginWithDemoCredentials = async (roleId) => {
-      const credentials = {
-          'admin': { email: 'admin@bangali-enterprise.test', password: 'AdminPassword123!' },
-          'owner': { email: 'demo.owner@bangali-enterprise.test', password: 'DemoOwner@2026!' },
-          'manager': { email: 'demo.manager@bangali-enterprise.test', password: 'DemoManager@2026!' },
-          'seller': { email: 'demo.seller@bangali-enterprise.test', password: 'DemoSeller@2026!' }
-      };
+    const credentials = {
+      'admin': { email: 'admin@bangali-enterprise.test', password: 'AdminPassword123!' },
+      'owner': { email: 'demo.owner@bangali-enterprise.test', password: 'DemoOwner@2026!' },
+      'manager': { email: 'demo.manager@bangali-enterprise.test', password: 'DemoManager@2026!' },
+      'seller': { email: 'demo.seller@bangali-enterprise.test', password: 'DemoSeller@2026!' }
+    };
 
-      const creds = credentials[roleId];
-      if (!creds) throw new Error('Invalid demo role');
-      return await login(creds.email, creds.password);
+    const creds = credentials[roleId];
+    if (!creds) throw new Error('Invalid demo role');
+    return await login(creds.email, creds.password);
   };
 
   const validateInviteCode = async (code) => {
-      return await inviteService.validateInviteCode(code);
+    return await inviteService.validateInviteCode(code);
   };
 
   const joinBusinessWithCode = async (code) => {
-      setLoading(true);
-      if (!user) throw new Error('User must be logged in to join a business');
-      
-      const result = await inviteService.acceptInviteCode(code, user.id);
-      if (result.error) {
-          setLoading(false);
-          throw result.error;
-      }
-      await checkUser();
+    setLoading(true);
+    if (!user) throw new Error('User must be logged in to join a business');
+
+    const result = await inviteService.acceptInviteCode(code, user.id);
+    if (result.error) {
       setLoading(false);
-      return result;
+      throw result.error;
+    }
+    await checkUser();
+    setLoading(false);
+    return result;
   };
 
   // Legacy/Alias Support for SupabaseAuthContext compatibility
   const signIn = login;
-  const loginUser = login; // Fix for "loginUser is not a function" if accessed via context
+  const loginUser = login;
+  const loginuser = login; // lowercase variant
+
   const signUp = async (email, password, options) => {
-      // Basic raw signup wrapper for compatibility
-      return await supabase.auth.signUp({ email, password, options });
+    return await supabase.auth.signUp({ email, password, options });
   };
-  const signupUser = signup; // Fix for consistency
+  const signupUser = signup;
+  const signupuser = signup; // lowercase variant
+  const singup = signup; // handle common typo
+
   const signOut = logout;
 
-  const isGlobalAdmin = () => profile?.role === 'global_admin';
+  const isGlobalAdmin = () => profile?.role === 'global_admin' || profile?.system_role === 'global_admin';
   const isOwner = () => profile?.role === 'owner';
   const isManager = () => profile?.role === 'manager';
   const isSeller = () => profile?.role === 'seller';
@@ -164,16 +175,20 @@ export function AuthProvider({ children }) {
       business,
       loading,
       login,
-      loginUser, // Exported alias
+      loginUser,
+      loginuser,
       logout,
       signup,
-      signupUser, // Exported alias
+      signupUser,
+      signupuser,
+      singup,
       // Legacy aliases
       signIn,
       signOut,
       signUp,
       // Extended features
       updatePassword,
+      forgotPassword,
       loginWithDemoCredentials,
       validateInviteCode,
       joinBusinessWithCode,

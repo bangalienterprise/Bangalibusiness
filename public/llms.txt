@@ -1,50 +1,105 @@
 ## Pages
 - [- Business Details](/businessdetails): No description available
+- [Account Verification | Admin](/accountverification): No description available
 - [Activate Account - Bangali Enterprise](/activateaccount): Activate your account by setting a new password.
 - [Admin Account - Bangali Enterprise](/adminaccountdashboard): No description available
+- [Agency Dashboard](/agencydashboard): No description available
+- [Analytics - Admin - Bangali Enterprise](/analytics): No description available
+- [Appointments - Service](/appointments): No description available
 - [Approval Management - Bangali Enterprise](/approval): Manage deletion requests for approval.
+- [Attendance - Bangali Enterprise](/attendance): No description available
+- [Booking Calendar - Bangali Enterprise](/bookingcalendar): No description available
 - [Business Expenses -](/businessexpenses): No description available
+- [Business Types - Admin - Bangali Enterprise](/businesstypemanagement): No description available
+- [Categories - Bangali Enterprise](/categories): No description available
+- [Client Portal - Bangali Enterprise](/clientportal): No description available
 - [CMS Editor - Global Admin](/cmseditor): No description available
 - [Collections - Bangali Enterprise](/collectionmanagement): No description available
+- [Courses - Bangali Enterprise](/coursemanager): No description available
 - [Customers - Bangali Enterprise](/customermanagement): No description available
+- [Customers - Bangali Enterprise](/customers): No description available
 - [Damage & Replacements - Bangali Enterprise](/damagemanagement): Record and manage damaged or replaced products.
+- [Damage Management](/damagemanagement): No description available
+- [Damage Reports](/damagereports): No description available
 - [Dashboard -](/retaildashboard): No description available
+- [Dashboard | Retail Store](/ownerdashboard): No description available
 - [Data Export](/dataexport): No description available
+- [Data Integrity | Admin](/dataintegrity): No description available
 - [Due Collection](/duecollection): No description available
+- [Due Collection | Retail Store](/duecollection): Manage customer dues and collections
+- [Education Dashboard](/educationdashboard): No description available
 - [Error - Bangali Enterprise](/error): No description available
+- [Expense Management](/expensemanagement): No description available
 - [Expenses - Bangali Enterprise](/expensemanagement): No description available
+- [Expenses - Bangali Enterprise](/expenselog): No description available
+- [Expenses - Bangali Enterprise](/expenses): No description available
+- [Fees - Bangali Enterprise](/feecollection): No description available
+- [Freelancer Dashboard](/freelancerdashboard): No description available
 - [Gift Card Management](/giftcardmanagement): No description available
+- [Gift Cards](/giftcardmanagement): No description available
+- [Gift Cards - Bangali Enterprise](/giftcards): No description available
 - [Global Admin - Bangali Enterprise](/globaladmindashboard): No description available
 - [Help Center - Bangali Enterprise](/help): No description available
+- [Invoices - Bangali Enterprise](/invoice): No description available
 - [Join Team - Bangali Enterprise](/joinexistingbusiness): No description available
 - [Manager Dashboard](/managerdashboard): No description available
+- [Manager Dashboard](/managerdashboard): No description available
+- [My Commission](/mycommission): No description available
 - [My Profile - Bangali Enterprise](/userprofile): No description available
 - [My Profile - Bangali Enterprise](/userprofile): No description available
 - [My Salary - Bangali Enterprise](/mysalary): View your salary collection history.
 - [Notifications](/notifications): No description available
+- [Orders](/ordermanagement): No description available
+- [Orders - Bangali Enterprise](/orders): No description available
 - [Orders - Bangali Enterprise](/orders): No description available
 - [Owner Account - Bangali Enterprise](/owneraccount): No description available
 - [Owner Dashboard - Bangali Enterprise](/owneraccountdashboard): No description available
 - [Owner Expenses - Bangali Enterprise](/ownerexpenses): Manage owner-specific expenses and investments.
 - [Page Not Found - Bangali Enterprise](/notfound): No description available
+- [Portfolio - Bangali Enterprise](/portfolio): No description available
+- [POS - Bangali Enterprise](/pos): No description available
 - [POS - New Sale](/sales): No description available
+- [Product Categories](/productcategories): No description available
+- [Products - Bangali Enterprise](/products): No description available
+- [Products & Stock |](/stock): No description available
+- [Projects - Agency](/projectboard): No description available
+- [Proposals - Bangali Enterprise](/proposals): No description available
 - [Reports - Bangali Enterprise](/financialreports): No description available
 - [Reports - Bangali Enterprise](/reports): No description available
+- [Reports - Bangali Enterprise](/reports): No description available
 - [Reset Password - Bangali Enterprise](/resetpassword): No description available
+- [Retail Dashboard](/retailstoredashboard): No description available
+- [Returns Management](/returns): No description available
 - [Role Management - Bangali Enterprise](/rolemanagement): Manage user roles and permissions.
 - [Salary Management - Bangali Enterprise](/salarymanagement): No description available
 - [Sales - Bangali Enterprise](/salesmanagement): No description available
+- [Sales History - Bangali Enterprise](/saleshistory): No description available
 - [Security - Bangali Enterprise](/usersecurity): No description available
+- [Seller Dashboard](/sellerdashboard): No description available
+- [Service Catalog - Bangali Enterprise](/servicelist): No description available
+- [Service Dashboard](/servicedashboard): No description available
+- [Settings - Bangali Enterprise](/settings): No description available
 - [Settings - Bangali Enterprise](/settings): No description available
 - [Settings - Bangali Enterprise](/systemsettings): No description available
 - [Setup 2FA - Bangali Enterprise](/mfaenroll): Set up Two-Factor Authentication for your account.
+- [Staff Management - Bangali Enterprise](/staffmanagement): No description available
 - [Stock Management - Bangali Enterprise](/stockmanagement): No description available
 - [Stock Management - Bangali Enterprise](/stock): No description available
+- [Students - Education](/studentlist): No description available
+- [Suppliers - Bangali Enterprise](/suppliers): No description available
 - [Suppliers - Bangali Enterprise](/suppliermanagement): No description available
+- [System Health | Admin](/healthcheck): No description available
+- [System Settings - Admin - Bangali Enterprise](/systemsettings): No description available
+- [System Settings | Retail Store](/systemsettings): No description available
 - [System Status - Bangali Enterprise](/system): Monitor system health and logs.
+- [Tasks - Bangali Enterprise](/taskboard): No description available
+- [Team - Bangali Enterprise](/team): No description available
+- [Team Management](/teammanagement): No description available
 - [Team Management - Bangali Enterprise](/teammanagement): No description available
 - [Untitled Page](/profile): No description available
 - [Update Password - Bangali Enterprise](/updatepassword): Update your account password.
 - [User Activity Log - Bangali Enterprise](/useractivitylog): No description available
+- [User Management - Admin - Bangali Enterprise](/usersmanagement): No description available
 - [User Management - Global Admin](/usermanagement): No description available
+- [Website Management - Admin - Bangali Enterprise](/websitemanagement): No description available
 - [Welcome to Bangali Enterprise](/bangalishaj): The starting point for your Bangali Enterprise application.

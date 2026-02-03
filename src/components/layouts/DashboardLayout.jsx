@@ -1,9 +1,9 @@
-
 import React, { useState, useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import Sidebar from '@/components/shared/Sidebar';
 import Topbar from '@/components/shared/Topbar';
 import { Sheet, SheetContent } from '@/components/ui/sheet';
+import { cn } from '@/lib/utils';
 
 const DashboardLayout = () => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
@@ -36,6 +36,11 @@ const DashboardLayout = () => {
     if (path.includes('due-collection')) return 'Due Collection';
     if (path.includes('gift-cards')) return 'Gift Cards';
     if (path.includes('categories')) return 'Categories';
+
+    // Restaurant
+    if (path.includes('floor-plan')) return 'Floor Plan';
+    if (path.includes('kitchen')) return 'Kitchen Display';
+    if (path.includes('menu')) return 'Menu Manager';
 
     // Agency
     if (path.includes('projects')) return 'Project Board';
@@ -70,7 +75,7 @@ const DashboardLayout = () => {
   };
 
   return (
-    <div className="flex h-screen bg-[#0f172a] text-white overflow-hidden">
+    <div className="flex h-screen bg-slate-50 dark:bg-[#0f172a] text-slate-900 dark:text-white overflow-hidden transition-colors duration-300">
       {/* Desktop Sidebar */}
       <div className="hidden md:block h-full shrink-0">
         <Sidebar
@@ -82,7 +87,7 @@ const DashboardLayout = () => {
 
       {/* Mobile Sidebar (Drawer) */}
       <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
-        <SheetContent side="left" className="p-0 w-64 bg-slate-900 border-r-slate-800">
+        <SheetContent side="left" className="p-0 w-64 bg-white dark:bg-slate-900 border-r-slate-200 dark:border-r-slate-800">
           <Sidebar isMobile={true} closeMobileMenu={() => setIsMobileMenuOpen(false)} />
         </SheetContent>
       </Sheet>

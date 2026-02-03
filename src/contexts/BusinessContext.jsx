@@ -31,13 +31,19 @@ export function BusinessProvider({ children }) {
       let businesses = [];
 
       if (isGlobalAdmin()) {
-        const { data, error } = await supabase.from('businesses').select('*');
-        if (!error) businesses = data;
+        const { data, error } = await supabase.from('businesses').select('*, business_types(slug, name)');
+        if (!error) {
+            businesses = data.map(b => ({
+                ...b,
+                type_slug: b.business_types?.slug,
+                type_name: b.business_types?.name
+            }));
+        }
       } else if (businessId) {
         // Fetch current user's business
         const { data, error } = await supabase
           .from('businesses')
-          .select('*')
+          .select('*, business_types(slug, name)')
           .eq('id', businessId)
           .single();
         
@@ -52,7 +58,11 @@ export function BusinessProvider({ children }) {
                 console.warn("Error loading business:", error);
             }
         } else if (data) {
-            businesses = [data];
+            businesses = [{
+                ...data,
+                type_slug: data.business_types?.slug,
+                type_name: data.business_types?.name
+            }];
         }
       }
 

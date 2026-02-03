@@ -11,7 +11,7 @@ export const authService = {
       });
 
       if (error) throw error;
-      
+
       // Fetch profile to ensure it exists and return it
       const { data: profile } = await supabase
         .from('profiles')
@@ -55,68 +55,68 @@ export const authService = {
         });
 
       if (profileError) {
-          // If upsert fails (e.g. RLS), we hope the trigger worked. 
-          // We'll proceed, but log it.
-          console.warn("Profile upsert failed (might exist via trigger):", profileError);
+        // If upsert fails (e.g. RLS), we hope the trigger worked. 
+        // We'll proceed, but log it.
+        console.warn("Profile upsert failed (might exist via trigger):", profileError);
       }
 
       // 3. Handle Business Logic
       if (accountType === 'create') {
-          // A. Create Business
-          const { data: business, error: bizError } = await supabase
-            .from('businesses')
-            .insert({
-                name: businessName,
-                type: businessType || 'retail',
-                owner_id: userId,
-                subscription_status: 'active'
-            })
-            .select()
-            .single();
+        // A. Create Business
+        const { data: business, error: bizError } = await supabase
+          .from('businesses')
+          .insert({
+            name: businessName,
+            type: businessType || 'retail',
+            owner_id: userId,
+            subscription_status: 'active'
+          })
+          .select()
+          .single();
 
-          if (bizError) throw bizError;
+        if (bizError) throw bizError;
 
-          // B. Link Business to Owner (Profile)
-          await supabase
-            .from('profiles')
-            .update({ business_id: business.id, role: 'owner' })
-            .eq('id', userId);
+        // B. Link Business to Owner (Profile)
+        await supabase
+          .from('profiles')
+          .update({ business_id: business.id, role: 'owner' })
+          .eq('id', userId);
 
-          // C. Add to Business Users (Team)
-          await supabase
-            .from('business_users')
-            .insert({
-                business_id: business.id,
-                user_id: userId,
-                role: 'owner'
-            });
+        // C. Add to Business Users (Team)
+        await supabase
+          .from('organization_members')
+          .insert({
+            business_id: business.id,
+            user_id: userId,
+            role: 'owner'
+          });
 
       } else if (accountType === 'join' && inviteCode) {
-          // Logic for joining via invite code would go here
-          // For now, we'll assume the invite system handles the linking via a separate service call
-          // or we can implement a basic lookup here.
-          
-          // Basic Invite Logic:
-          const { data: invitation } = await supabase
-            .from('business_invitations')
-            .select('*')
-            .eq('code', inviteCode)
-            .single();
-            
-          if (invitation) {
-             await supabase
-                .from('business_users')
-                .insert({
-                    business_id: invitation.business_id,
-                    user_id: userId,
-                    role: invitation.role
-                });
-                
-             await supabase
-                .from('profiles')
-                .update({ business_id: invitation.business_id, role: invitation.role })
-                .eq('id', userId);
-          }
+        // Logic for joining via invite code would go here
+        // For now, we'll assume the invite system handles the linking via a separate service call
+        // or we can implement a basic lookup here.
+
+        // Basic Invite Logic:
+        const { data: invitation } = await supabase
+          .from('invites')
+          .select('*')
+          .eq('code', inviteCode)
+          .single();
+
+        if (invitation) {
+          await supabase
+            .from('organization_members')
+            .insert({
+              business_id: invitation.business_id,
+              user_id: userId,
+              role: invitation.role
+            });
+
+          await supabase
+            .from('profiles')
+            .update({ business_id: invitation.business_id, role: invitation.role })
+            .eq('id', userId);
+        }
       }
 
       return { user: authData.user, error: null };
@@ -148,17 +148,24 @@ export const authService = {
       // Fetch business if linked
       let business = null;
       if (profile?.business_id) {
-          const { data: biz } = await supabase
-            .from('businesses')
-            .select('*')
-            .eq('id', profile.business_id)
-            .maybeSingle();
-          business = biz;
+        const { data: biz } = await supabase
+          .from('businesses')
+          .select('*')
+          .eq('id', profile.business_id)
+          .maybeSingle();
+        business = biz;
       }
 
       return { user, profile, business, error: null };
     } catch (error) {
       return { user: null, error };
     }
+  },
+
+  async resetPasswordForEmail(email) {
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: window.location.origin + '/update-password',
+    });
+    return { error };
   }
 };

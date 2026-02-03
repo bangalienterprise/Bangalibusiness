@@ -1,13 +1,26 @@
 import { Client } from 'ssh2';
 
+// Load environment variables if needed
+if (!process.env.SSH_PASSWORD) {
+    try {
+        import('dotenv/config');
+    } catch (e) {
+        // ignore
+    }
+}
+
 const config = {
-    host: '195.35.39.191',
-    port: 65002,
-    username: 'u562139744',
-    password: 'Bangaliadmin@2025.!?',
+    host: process.env.SSH_HOST || '195.35.39.191',
+    port: parseInt(process.env.SSH_PORT) || 65002,
+    username: process.env.SSH_USER || 'u562139744',
+    password: process.env.SSH_PASSWORD, // Must be set in environment
     readyTimeout: 20000,
     keepaliveInterval: 10000
 };
+
+if (!config.password) {
+    console.warn("Warning: SSH_PASSWORD not set in environment");
+}
 
 const conn = new Client();
 
